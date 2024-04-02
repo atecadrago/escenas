@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>VR Scene Switcher</title>
+    <script src="dist/aframe-v1.5.0.min.js"></script>
+    <script>
+      AFRAME.registerComponent('scene-switcher', {
+        schema: {
+          images: {type: 'array', default: ['escena-1.png', 'escena-2.png', 'escena-3.png', 'escena-4.png', 'escena-5.png']}
+        },
+        init: function () {
+          this.currentIndex = 0; // Inicializa el índice de la imagen actual
+          this.el.addEventListener('abuttondown', this.switchScene.bind(this));
+        },
+        switchScene: function () {
+          this.currentIndex = (this.currentIndex + 1) % this.data.images.length; // Calcula el siguiente índice de forma cíclica
+          var sky = document.querySelector('a-sky'); // Encuentra el elemento a-sky
+          sky.setAttribute('src', this.data.images[this.currentIndex]); // Cambia la imagen del fondo
+        }
+      });
+    </script>
+</head>
+<body>
+    <a-scene>
+        <!-- Define los controles de Oculus y agrega el componente de cambio de escena -->
+        <a-entity oculus-touch-controls="hand: right" scene-switcher></a-entity>
+
+        <!-- Define el elemento del cielo con una imagen inicial -->
+        <a-sky src="escena-1.png"></a-sky>
+    </a-scene>
+</body>
+</html>
