@@ -7,14 +7,21 @@
     <script>
       AFRAME.registerComponent('scene-switcher', {
         schema: {
-          images: {type: 'array', default: ['escena-1.png', 'escena-2.png', 'escena-3.png', 'escena-4.png', 'escena-5.png']}
+          images: {type: 'array', default: ['escena-1.png', 'escena-2.png', 'escena-3.png', 'escena-4.png', 'foto-1.JPG', 'foto-2.JPG', 'video-360.MP4']}
         },
         init: function () {
           this.currentIndex = 0; // Inicializa el índice de la imagen actual
-          this.el.addEventListener('abuttondown', this.switchScene.bind(this));
+          this.el.addEventListener('abuttondown', () => this.switchScene(true)); // Avanza a la siguiente escena
+          this.el.addEventListener('bbuttondown', () => this.switchScene(false)); // Retrocede a la escena anterior
         },
-        switchScene: function () {
-          this.currentIndex = (this.currentIndex + 1) % this.data.images.length; // Calcula el siguiente índice de forma cíclica
+        switchScene: function (forward) {
+          if (forward) {
+            // Calcula el siguiente índice de forma cíclica para avanzar
+            this.currentIndex = (this.currentIndex + 1) % this.data.images.length;
+          } else {
+            // Calcula el índice anterior de forma cíclica para retroceder
+            this.currentIndex = (this.currentIndex - 1 + this.data.images.length) % this.data.images.length;
+          }
           var sky = document.querySelector('a-sky'); // Encuentra el elemento a-sky
           sky.setAttribute('src', this.data.images[this.currentIndex]); // Cambia la imagen del fondo
         }
@@ -25,7 +32,7 @@
     <a-scene>
         <!-- Define los controles de Oculus y agrega el componente de cambio de escena -->
         <a-entity oculus-touch-controls="hand: right" scene-switcher></a-entity>
-
+        
         <!-- Define el elemento del cielo con una imagen inicial -->
         <a-sky src="escena-1.png"></a-sky>
     </a-scene>
